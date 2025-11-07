@@ -35,7 +35,6 @@ Well Sarah, I didn't want to receive **this** fucking email... but here we are.
 
 So I downloaded everything.
 
-**File:** [`Vendors/Warmly/Research/www.warmly.ai.har.gz`](Vendors/Warmly/Research/www.warmly.ai.har.gz)
 **Size:** 32MB uncompressed
 **Lines:** 155,984 lines of network traffic
 **Every single HTTP request. Every tracking call. Every surveillance vendor.**
@@ -65,8 +64,6 @@ You're selling visitor identification software... but you don't trust your own p
 **Total: 11 surveillance vendors on one page.**
 
 Plus: Google Tag Manager, Intercom, Reddit Pixel, Upvert Pixel, Wistia, Cloudflare Insights.
-
-**Evidence:** [`Vendors/Warmly/Research/WARMLY-FINDINGS.md`](Vendors/Warmly/Research/WARMLY-FINDINGS.md) — 438 lines of detailed analysis.
 
 ---
 
@@ -121,18 +118,18 @@ I spent a week reverse-engineering the visitor deanonymization industry.
 ### The Receipts:
 
 **4 Complete Vendor Dossiers:**
-- **RB2B:** [`RB2B-API-CONTRADICTION-EXPOSED.md`](Vendors/RB2B/Research/RB2B-API-CONTRADICTION-EXPOSED.md) — Support docs say "we have no API" while their website advertises "our entire suite of APIs" and they publish a complete Postman collection. Three official sources. Two completely opposite statements.
+- **RB2B:** Support docs say "we have no API" while their website advertises "our entire suite of APIs" and they publish a complete Postman collection. Three official sources. Two completely opposite statements.
 - **Warmly:** 171K-line HAR, 11-vendor stack, competitor dependencies exposed
 - **Koala:** Official "deanonymizing" admission captured from their own marketing
 - **Apollo:** 710K-line HAR, 10+ vendor stack documented
 
 **PostHog Surveillance:**
-- [`Vendors/RB2B/Research/rb2b_posthog/`](Vendors/RB2B/Research/rb2b_posthog/) — 43 captured telemetry events
+- 43 captured telemetry events from RB2B's own site
 - 800+ tracking events per session on Warmly's site
 - Every click, mouse movement, scroll, form interaction
 
 **Complete Vendor Database:**
-- [`docs/VENDORS.md`](docs/VENDORS.md) — 250+ vendors researched
+- 250+ vendors researched
 - 15 production-ready detection signatures
 - Multi-method detection (scripts, globals, network, cookies, inline code)
 
@@ -143,33 +140,32 @@ I spent a week reverse-engineering the visitor deanonymization industry.
 **73 commits. One rage sprint. One person who didn't know what Git Pull meant.**
 
 ### Production Scanner
-- **File:** [`scanner.js`](scanner.js) — **1,034 lines**
+- **1,034 lines of code**
 - Playwright browser automation
 - Multi-method vendor detection
 - HTML report generation with chain-of-custody
 - ASCII art banner with color cycling (because fuck it, why not)
 
 ### TriMark Visual System
-- **File:** [`components/TriMark.tsx`](components/TriMark.tsx) — **185 lines**
+- **185 lines of code**
 - Mathematical precision equilateral triangle
 - Framer Motion path drawing animations
 - Stage-specific edge highlighting (DETECT → DIFF → PROVE)
 
 ### Ghostline Design System
-- **File:** [`tailwind.config.js`](tailwind.config.js)
 - Ghost in the Shell-inspired dark palette
 - Scanning animations (8s linear infinite sweep)
 - Color system: ink-950/900/800 (backgrounds), cyan/violet/green (accents)
 
 ### Working Detection Signatures
-- **File:** [`signatures/vendors.json`](signatures/vendors.json) — **15 production vendors**
+- **15 production vendors**
 - RB2B, Clearbit, 6sense, Demandbase, Koala, Warmly, FullStory, etc.
 - Weighted confidence scoring (identity=6-7, network=4-7, script=3-5)
 - Only ship findings ≥0.50 confidence
 
 ### Evidence Samples
-- **Enterprise Evidence Pack:** [`public/samples/evidence-pack-sample-redacted.html`](public/samples/evidence-pack-sample-redacted.html) — 2-page PDF with executive summary, scorecard, gap details, remediation guidance, chain-of-custody
-- **Sensor Proof Card:** [`public/samples/proof-card-sample.html`](public/samples/proof-card-sample.html) — Personal receipt with vendor list, categories, detection methods, timestamps
+- **Enterprise Evidence Pack:** 2-page PDF with executive summary, scorecard, gap details, remediation guidance, chain-of-custody
+- **Sensor Proof Card:** Personal receipt with vendor list, categories, detection methods, timestamps
 
 ---
 
@@ -252,49 +248,6 @@ Same detection engine, different outputs. Enterprise users don't get upsold Sens
 
 ---
 
-## Repo Structure (The Proof)
-
-```
-E:\BLACKOUT/
-├── scanner.js (1,034 LOC) ..................... Production CLI scanner
-├── signatures/
-│   └── vendors.json ........................... 15 working vendor signatures
-├── components/
-│   ├── TriMark.tsx (185 LOC) .................. Mathematical equilateral triangle
-│   ├── Hero.tsx ............................... Animated hero with scanning effects
-│   └── WaitlistForm.tsx ....................... Lane-smart email capture
-├── app/
-│   └── page.tsx (736 LOC) ..................... Landing page (Enterprise + Sensor)
-├── tailwind.config.js ......................... Ghostline design system
-├── public/samples/
-│   ├── evidence-pack-sample-redacted.html ..... Enterprise Evidence Pack demo
-│   └── proof-card-sample.html ................. Sensor Proof Card demo
-├── Vendors/ (39 folders)
-│   ├── RB2B/
-│   │   └── Research/
-│   │       ├── RB2B-API-CONTRADICTION-EXPOSED.md (488 LOC)
-│   │       └── rb2b_posthog/ (43 telemetry captures)
-│   ├── Warmly/
-│   │   └── Research/
-│   │       ├── www.warmly.ai.har.gz (32MB, 155,984 lines)
-│   │       └── WARMLY-FINDINGS.md (438 LOC)
-│   ├── Koala/ .................................. Complete vendor dossier
-│   └── Apollo/ ................................. 710K-line HAR file
-├── docs/
-│   ├── VENDORS.md .............................. 250+ vendor database
-│   ├── MISSION-CONSTRAINTS-STRATEGY.md (1,016 LOC)
-│   └── CONTROLS.md ............................. BLK-001–BLK-006 control library
-└── research/
-    ├── MASTER-RESEARCH-SUMMARY.md
-    ├── HAR-ANALYSIS-REPORT.md
-    └── warmly/
-        └── Caught your Warmly site visit.eml ... The original cold email (214 lines)
-```
-
-**887,000+ lines of evidence. 73 commits in 48 hours. All verifiable.**
-
----
-
 ## By the Numbers
 
 | Metric | Value |
@@ -311,21 +264,7 @@ E:\BLACKOUT/
 
 ---
 
-## Quick Start
-
-### CLI Scanner (Available Now)
-
-```bash
-git clone https://github.com/clark-prog/Blackout.git
-cd Blackout
-npm install
-npm run install-browsers
-node scanner.js https://example.com
-```
-
-**Detects 15+ surveillance vendors. Generates HTML reports with chain-of-custody.**
-
-### Landing Page (Live Now)
+## See It Live
 
 Visit **[deployblackout.com](https://deployblackout.com)** to see:
 - Sample Evidence Pack (Enterprise)
@@ -342,7 +281,7 @@ Visit **[deployblackout.com](https://deployblackout.com)** to see:
 ### Step 1: DETECT (Multi-Method Vendor Detection)
 
 **5 Detection Layers:**
-1. **Script Fingerprinting** — CDN URLs, loader patterns (`ddwl4m2hdecbv.cloudfront.net/rb2b.js`)
+1. **Script Fingerprinting** — CDN URLs, loader patterns
 2. **Window Globals** — `window.rb2b`, `window.warmly`, `window.ko`, `window.FS`
 3. **Network Analysis** — Host matching, path patterns, request volumes
 4. **Cookie Inspection** — First-party vs third-party, session vs persistent
@@ -417,51 +356,9 @@ So I reverse-engineered the entire industry. 887,000+ lines of evidence. 170+ ve
 - "I saw you were researching [competitor]..."
 - Personalized video from CEO of a company you never heard of.
 
-**Drop your story in [GitHub Issues](https://github.com/clark-prog/Blackout/issues) or email:** intel@blackout.tools
+**Drop your story via email:** intel@blackout.tools
 
 We'll add it to the database. Document the vendor. Build the signature. Make it public.
-
----
-
-## Documentation
-
-- **[docs/INDEX.md](docs/INDEX.md)** — Complete documentation index
-- **[docs/VENDORS.md](docs/VENDORS.md)** — 250+ vendor database with surveillance tactics
-- **[docs/CONTROLS.md](docs/CONTROLS.md)** — BLK-001–BLK-006 control library
-- **[docs/EVIDENCE-PACKS.md](docs/EVIDENCE-PACKS.md)** — Evidence Pack format specification
-- **[docs/MISSION-CONSTRAINTS-STRATEGY.md](docs/MISSION-CONSTRAINTS-STRATEGY.md)** — Operational framework (1,016 LOC)
-
----
-
-## Contributing
-
-**Vendor Detection Requests:** [Submit via Issues](https://github.com/clark-prog/Blackout/issues)
-**Corrections:** If we got something wrong, we'll fix it publicly within 72 hours
-**Open-Source Data:** Vendor aliases, policy phrase classes, detection signatures
-
-**Vendor Corrections Process:**
-1. Submit via GitHub Issues with specific claim + verifiable proof
-2. We review within 72 hours
-3. Accepted AND rejected corrections published to public log
-
-**We hold ourselves to the same standard we hold vendors to: receipts over promises.**
-
----
-
-## License
-
-MIT License — See [LICENSE](LICENSE)
-
-**Use this tool to:**
-- ✅ Protect yourself from surveillance (Sensor)
-- ✅ Audit your own site for undisclosed vendors (Enterprise)
-- ✅ Research vendor behavior (CLI Scanner)
-- ✅ Expose privacy violations (counsel-ready evidence)
-
-**Do NOT use this tool to:**
-- ❌ Harass individuals
-- ❌ Conduct illegal surveillance
-- ❌ Violate terms of service maliciously
 
 ---
 
@@ -471,7 +368,6 @@ MIT License — See [LICENSE](LICENSE)
 - **Sensor Beta:** Join waitlist at [deployblackout.com](https://deployblackout.com)
 - **Intel / Stories:** intel@blackout.tools
 - **Founder:** [@clarkbbarron](https://www.linkedin.com/in/clarkbarron)
-- **Issues:** [GitHub Issues](https://github.com/clark-prog/Blackout/issues)
 
 ---
 
