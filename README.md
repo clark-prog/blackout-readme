@@ -1,4 +1,4 @@
-![Blackout Logo](logo_white)
+![Blackout Logo](2.svg)
 
 # This is what a 72-hour "Rage Sprint" looks like.
 
