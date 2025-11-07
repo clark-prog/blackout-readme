@@ -63,58 +63,162 @@ Operational controls, scoring, and schemas for verifying GTM runtime behavior ag
 
 ---
 
-## Control Library (v0.1)
+Control Library (v0.1)
 
-IDs → check → suggested remediation.
+IDs → Check → Suggested remediation.
+Use these controls to detect runtime–policy gaps and fix disclosure, consent, and claims drift across your GTM stack.
 
-- **BLK-001 Undisclosed Subprocessor**  
-  **Check:** vendor in `detections` ∉ `disclosures`.  
-  **Remediate:** add vendor to subprocessor list; republish policy with version/date.
+**BLK-001 — Undisclosed Subprocessor**
 
-- **BLK-002 De-anonymization Without Notice**  
-  **Check:** `category = "deanonymization"` detected; no explicit identity-resolution notice/basis in policy.  
-  **Remediate:** add clear notice, lawful basis (opt-in/opt-out), retention, DPA references.
+- **CHECK:** Vendor in detections ∉ disclosures.
+- **REMEDIATE:** Add vendor to subprocessor list; republish policy with version/date.
 
-- **BLK-003 Session Recording Without Consent**  
-  **Check:** `category = "session-replay"` loads before recorded consent.  
-  **Remediate:** gate behind CMP; honor region logic and GPC.
+**BLK-002 — De-anonymization Without Notice**
 
-- **BLK-004 Enrichment on PII Without Basis**  
-  **Check:** enrichment calls after form submit; disclosures omit enrichment vendors/uses.  
-  **Remediate:** disclose enrichment purpose, vendors, retention; update DPA/ROPA.
+- **CHECK:** category = "deanonymization" detected; no explicit identity-resolution notice/basis in policy.
+- **REMEDIATE:** Add clear notice, lawful basis (opt-in/opt-out), retention, DPA references.
 
-- **BLK-005 Shadow Cookies / CNAME Cloak**  
-  **Check:** third-party tracking via first-party CNAME; cookies set pre-consent.  
-  **Remediate:** disable until consent; document vendor + purpose; adjust DNS/CSP.
+**BLK-003 — Session Recording Without Consent**
 
-- **BLK-006 “Instant Outreach” from Web Events**  
-  **Check:** webhook to SDR/LLM using visit-level signals; no disclosure of automated decisioning.  
-  **Remediate:** disclose automated processing; provide opt-out and escalation path.
+- **CHECK:** category = "session-replay" loads before recorded consent.
+- **REMEDIATE:** Gate behind CMP; honor region logic and GPC.
 
-- **BLK-007 Consent Timing Violation**  
-  **Check:** any identity/replay/ads request timestamp < first consent accept; or persists after **Reject All**.  
-  **Remediate:** enforce true prior consent; block scripts until state is known.
+**BLK-004 — Enrichment on PII Without Basis**
 
-- **BLK-008 GPC / DNT Not Honored**  
-  **Check:** `Global Privacy Control` or browser DNT ignored in regions where honored/claimed.  
-  **Remediate:** respect signals consistently; update policy to match behavior.
+- **CHECK:** Enrichment calls after form submit; disclosures omit enrichment vendors/uses.
+- **REMEDIATE:** Disclose enrichment purpose, vendors, retention; update DPA/ROPA.
 
-- **BLK-009 Region Gating Failure**  
-  **Check:** EU/UK/CA visitors receive identity/replay/ads despite regional gating claims.  
-  **Remediate:** fix geo logic; add region tests to CI; update manifests.
+**BLK-005 — Shadow Cookies / CNAME Cloak**
 
-- **BLK-010 Fingerprinting / Evasion**  
-  **Check:** canvas/audio/font fingerprinting or **S3/CDN alias** evasion (e.g., `b2bjsstore` S3).  
-  **Remediate:** remove non-essential fingerprinting; stop alias evasion; disclose unavoidable signals.
+- **CHECK:** Third-party tracking via first-party CNAME; cookies set pre-consent.
+- **REMEDIATE:** Disable until consent; document vendor + purpose; adjust DNS/CSP.
 
-- **BLK-011 Policy–Runtime Mismatch**  
-  **Check:** policy states “no X” but runtime shows X (or stale subprocessor revision).  
-  **Remediate:** bring runtime into compliance or update policy; date/version the change.
+**BLK-006 — “Instant Outreach” from Web Events**
 
-- **BLK-012 Unattributed Pixel / Unknown Vendor**  
-  **Check:** network host not listed in disclosures or vendor registry.  
-  **Remediate:** identify owner; disclose or remove; add to vendor inventory.
+- **CHECK:** Webhook to SDR/LLM using visit-level signals; no disclosure of automated decisioning.
+- **REMEDIATE:** Disclose automated processing; provide opt-out and escalation path.
 
+**BLK-007 — Consent Timing Violation**
+
+- **CHECK:** Any identity/replay/ads request timestamp < first consent accept; or persists after “Reject All.”
+- **REMEDIATE:** Enforce true prior consent; block scripts until state is known.
+
+**BLK-008 — GPC / DNT Not Honored**
+
+- **CHECK:** Global Privacy Control or browser DNT ignored in regions where honored/claimed.
+- **REMEDIATE:** Respect signals consistently; update policy to match behavior.
+
+**BLK-009 — Region Gating Failure**
+
+- **CHECK:** EU/UK/CA visitors receive identity/replay/ads despite regional gating claims.
+- **REMEDIATE:** Fix geo logic; add region tests to CI; update manifests.
+
+**BLK-010 — Fingerprinting / Evasion**
+
+- **CHECK:** Canvas/audio/font fingerprinting or S3/CDN alias evasion (e.g., b2bjsstore S3).
+- **REMEDIATE:** Remove non-essential fingerprinting; stop alias evasion; disclose unavoidable signals.
+
+**BLK-011 — Policy–Runtime Mismatch**
+
+- **CHECK:** Policy states “no X” but runtime shows X (or stale subprocessor revision).
+- **REMEDIATE:** Bring runtime into compliance or update policy; date/version the change.
+
+**BLK-012 — Unattributed Pixel / Unknown Vendor**
+
+- **CHECK:** Network host not listed in disclosures or vendor registry.
+- **REMEDIATE:** Identify owner; disclose or remove; add to vendor inventory.
+
+**BLK-013 — Server-Side Bypass of Consent**
+
+- **CHECK:** Server-to-server (CAPI/Segment/RudderStack/etc.) forwarding identity or event data while CMP state is Reject/Unknown.
+- **REMEDIATE:** Enforce consent state in server pipelines; block enrichment/ads destinations until consent.
+
+**BLK-014 — Hashed Email Matching Without Disclosure**
+
+- **CHECK:** Outbound HEM (e.g., SHA-256 emails to ads/ID partners) with no explicit policy mention.
+- **REMEDIATE:** Disclose hashed matching explicitly; add opt-out and retention.
+
+**BLK-015 — Data Retention & Purpose Drift**
+
+- **CHECK:** Policy lacks retention for identity/enrichment/session-replay OR runtime shows storage > N days with no stated purpose.
+- **REMEDIATE:** Define retention windows per category; enforce TTL; update policy/ROPA.
+
+**BLK-016 — CMP Misclassification / Dark Patterns**
+
+- **CHECK:** Trackers labeled “strictly necessary” when they’re ads/analytics; reject path requires more clicks than accept; consent is bundled.
+- **REMEDIATE:** Correct categories; equal friction; per-purpose toggles.
+
+**BLK-017 — Opt-Out / Suppression Not Propagated**
+
+- **CHECK:** User opt-out or GPC acknowledged, but downstream vendors continue processing (detected via follow-up pings).
+- **REMEDIATE:** Implement suppression propagation to subprocessors; document SLA.
+
+**BLK-018 — Cross-Border Transfer Without Basis**
+
+- **CHECK:** Runtime shows transfer to non-adequacy region (e.g., US) without SCC/appropriate safeguards disclosed.
+- **REMEDIATE:** Add transfer basis (SCCs/Art.49), update DPA; or regionalize.
+
+**BLK-019 — Webhook/LLM Data Leakage**
+
+- **CHECK:** Webhooks to Slack/LLM endpoints include raw PII or sensitive fields not minimized.
+- **REMEDIATE:** Minimize payload; mask PII; add field allow-list and secrets management.
+
+**BLK-020 — “Respect for Signals” Scope Mismatch**
+
+- **CHECK:** Policy claims “we honor GPC/DNT,” but only some categories are suppressed at runtime.
+- **REMEDIATE**: Honor signals across all relevant categories (ads, identity, replay); update policy if scope is narrower.
+
+**BLK-021 — “Compliant” Claim vs. Reality**
+
+- **CHECK:** Public claims like “GDPR/CCPA compliant,” “privacy-first,” “no cookies,” “cookieless analytics.” Runtime shows tracking or consent patterns that contradict.
+- **REMEDIATE:** Remove absolute compliance claims; replace with specific controls (“gated by consent,” “opt-out honored incl. GPC”); update creatives/LPs.
+
+**BLK-022 — “Anonymized” Claim, Person-Level Behavior**
+
+- **CHECK:** Ads/posts/LPs say “anonymous” or “no PII,” while identity resolution, hashed email matching, or outreach tied to visit is detected.
+- **REMEDIATE:** Change language to “pseudonymous” with scope/basis/retention, or stop person-level processing.
+
+**BLK-023 — “Cookieless” Claim, Fingerprinting/Server-Side**
+
+- **CHECK:** “Cookieless” marketing while canvas/WebGL/device fingerprints or server-side forwarding (CAPI/Segment/Rudder) run pre-consent.
+- **REMEDIATE:** Disclose fingerprinting/server-side uses; gate by consent or remove non-essential signals; align copy.
+
+**BLK-024 — “We Don’t Retarget/Share” vs. Pixels/HEM**
+
+- **CHECK:** “No retargeting/sharing” claim while Meta/LinkedIn/Google pixels or hashed email matching (HEM) are active.
+- **REMEDIATE:** Disclose destinations & purposes or disable; add opt-out and suppression propagation.
+
+**BLK-025 — Automated Decisioning Omission in Ads**
+
+- **CHECK:** Ads/LPs pitch “instant outreach,” “AI routing,” or “self-driving SDR,” but provide no disclosure of automated decisioning or escalation path.
+- **REMEDIATE:** Add plain-English notice of automated processing, human review path, and opt-out on the LP and policy.
+
+**BLK-026 — Influencer/Founder Posts Without Disclosure**
+
+- **CHECK:** Paid/affiliated posts (employees, creators, partners) lack material-connection disclosure (#ad, “paid partnership,” etc.).
+- **REMEDIATE:** Mandate disclosure in all creator briefs; approve copy; archive proof.
+
+**BLK-027 — Badge/Seal/Logo Misrepresentation**
+
+- **CHECK:** Use of “GDPR,” “CCPA” badges, certification logos, or customer logos implying endorsement when none exists or scope is misstated.
+- **REMEDIATE:** Remove badges/logos or add accurate scope; maintain rights/ROE docs.
+
+**BLK-028 — Opt-Out/Do-Not-Sell Claim vs. Journey**
+
+- **CHECK:** Ads/promos promise “easy opt-out,” but landing & downstream flows require dark-pattern steps or don’t propagate suppression to vendors.
+- **REMEDIATE:** Equal-friction opt-out; propagate to subprocessors; show confirmation.
+
+**BLK-029 — Sensitive-Category Targeting**
+
+- **CHECK:** Ad sets target or infer sensitive attributes (health, children, sexual life, precise location) while public copy claims “no sensitive data.”
+- **REMEDIATE:** Remove sensitive targeting; update targeting policy and public claims.
+
+**BLK-030 — “Security/Privacy Certified” Scope Creep**
+
+- **CHECK:** Claims like “SOC 2 / ISO certified” used to imply privacy compliance for ads/ID tech that’s out of certification scope.
+- **REMEDIATE:** Limit claims to the certified system and scope; add explicit scope statements and caveats; remove misleading badges from ads/LPs; link to current report dates.
+
+Implementation note: Add these to docs/CONTROLS.md and reference from the main README under Blackout Enterprise → Control Library.
 ---
 
 ## Risk & Scoring
