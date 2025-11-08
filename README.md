@@ -265,7 +265,7 @@ Implementation note: Add these to docs/CONTROLS.md and reference from the main R
   "confidence": 0.96,
   "signals": ["network", "script", "global"]
 }
-
+```
 
 
 ## The Blackout Ecosystem
